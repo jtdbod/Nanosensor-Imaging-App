@@ -2,6 +2,7 @@ function[fitResults, fitPlot, spikeLocs, significance]=fitExponentialFunction(tr
 % Determine if any transients occur using a simple gradient method and
 % assumption of negative gaussian noise. Then, if transients are present,
 % fit a multiexponential curve to the data.
+% fitResults = [A 1/tau_off 1/tau_on vertical_offset]   
 
 % Estimate spikes using simple gradient and gaussian noise
 spikeLocs = [];
@@ -45,4 +46,5 @@ else
     fitResults=[];
     fitPlot=[];
 end
+
 end

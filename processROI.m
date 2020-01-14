@@ -51,7 +51,7 @@ function [measuredValues]=processROI(app)
         baselinedData = trace-filtTrace;
         %Calculate df/f0 using f0 as the mean intensity of the 3 seconds prior to
         %stimulation
-        stimFrame = app.imageStackInfo.stimNumber;
+        stimFrame = app.imageStackInfo.stimFrame;
         f0=mean(trace(1:stimFrame-floor(3*frameRate)));
         df1 = (trace-f0)./f0;
         measuredValues(roi).dF = df1;
