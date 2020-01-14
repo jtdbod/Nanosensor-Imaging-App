@@ -29,22 +29,31 @@ end
 
 %Fit exponential function to trace starting from stimulus if spike occurs
 %within 2 seconds of stimulus
-significance = ~isempty(spikeLocs)&&~isempty(find(spikeLocs>stimFrame))&&~isempty(find(spikeLocs<stimFrame+(2*frameRate)));
+significance = ~isempty(spikeLocs)&&~isempty(find(spikeLocs>stimFrame))&&~isempty(find(spikeLocs<stimFrame+floor((2*frameRate))));
 if significance
     ydata = trace(stimFrame:end);
     xdata = 1:length(ydata);
     xdata = xdata./frameRate;
-    x0 = [max(ydata), 1/10, 1, 0.03]; %pick arbitrary initial values for the constant and tau 
+    %Fit parameters [A t_off t_on offset]
+    x0 = [max(ydata), 1/5, 1, 0.03]; %pick arbitrary initial values for the constant and tau 
     F = @(x,xdata)x(1).*(1-exp(-x(3)*xdata)).*exp(-x(2).*xdata)+x(4); %defines first order equation
     opts = optimset('Display','off');
     warning off;
-    fitResults = lsqcurvefit(F,x0,xdata,ydata,[],[],opts); %adds the curve fit parameters to the parameter matrix
+    lowerBounds = [0,1/15,1/2,0.0001]; %Bounds for fit parameters.
+    upperBounds = [1000,1/0.01,1/0.01,0.05]; %Bounds for fit parameters
+    fitResults = lsqcurvefit(F,x0,xdata,ydata,lowerBounds,upperBounds,opts); %adds the curve fit parameters to the parameter matrix
     warning on;
     shiftedxData = xdata+stimFrame./frameRate;
     fitPlot = [shiftedxData; F(fitResults,xdata)];
 else
-    fitResults=[];
-    fitPlot=[];
+    %If no transient detected, return NaN array for fit and a flat fit
+    %curve.
+    fitResults=[NaN NaN NaN NaN];
+    ydata = zeros(1,length(trace(stimFrame:end)));
+    xdata = 1:length(ydata);
+    xdata = xdata./frameRate;
+    shiftedxData = xdata+stimFrame./frameRate;
+    fitPlot = [shiftedxData; ydata];
 end
 
 end
