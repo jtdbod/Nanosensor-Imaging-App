@@ -68,7 +68,7 @@ function [measuredValues]=processROI(app)
         measuredValues(roi).zscore = zscore;
         %Calculate AUC for the for the detrended dF/F curve. Use time
         %interval from stimulus to stimulus+5seconds.
-        measuredValues(roi).auc = sum(df2(stimFrame:stimFrame+5*frameRate));
+        measuredValues(roi).auc = sum(df2(stimFrame:stimFrame+floor(5*frameRate)));
     end  
     disp('Done');
 end
