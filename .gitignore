@@ -4,3 +4,9 @@
 testingScript.m
 
 Summary of Results.xlsx
+
+*.xlsx
+
+*.mat
+
+*.tif
