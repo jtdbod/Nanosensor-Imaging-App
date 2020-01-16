@@ -10,3 +10,5 @@ Summary of Results.xlsx
 *.mat
 
 *.tif
+
+.DS_Store
