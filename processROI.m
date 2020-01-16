@@ -12,7 +12,7 @@ function [measuredValues]=processROI(app)
         'dFdetrend',zeros(1,size(imagestack,3)),...
         'auc',zeros(1));
     %Make progress bar
-    f = app.UIFigure;
+    f = app.NanosensorImagingAppUIFigure;
     d = uiprogressdlg(f,'Title','Collecting ROI Data',...
     'Message','Please Wait','Cancelable','on');
     %Process ROIs frame by frame
@@ -37,7 +37,7 @@ function [measuredValues]=processROI(app)
     end
     %Calculate dF/F using average of 30 previous frames
     %Make progress bar
-    f = app.UIFigure;
+    f = app.NanosensorImagingAppUIFigure;
     d = uiprogressdlg(f,'Title','Normalizing Timeseries Traces',...
     'Message','Please Wait','Cancelable','on');
     for roi=1:numROIs

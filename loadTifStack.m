@@ -19,7 +19,7 @@ function results = loadTifStack(varargin)
     imageStack=zeros(app.imageStackInfo.height,...
         app.imageStackInfo.width,app.imageStackInfo.numFrames);
     %Make progress bar
-    f = app.UIFigure;
+    f = app.NanosensorImagingAppUIFigure;
     d = uiprogressdlg(f,'Title','Loading Image Stack',...
     'Message','Please Wait','Cancelable','on');
     for j=1:app.imageStackInfo.numFrames
