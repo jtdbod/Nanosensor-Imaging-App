@@ -6,19 +6,19 @@ Nanosensor-Imaging-App
 </h1>
 
 ## Table of Contents
-- [Description] (#description)
-- [Features] (#features)
-- [Installation] (#installation)
-- [Usage] (#usage)
-- [Support] (#support)
-- [Acknowledgements] (#acknowledgements)
-- [License] (#license)
+* [Description](#description)
+* [Features](#features)
+* [Installation](#installation)
+* [Usage](#usage)
+* [Support](#support)
+* [Acknowledgements](#acknowledgements)
+* [License](#license)
 
-<a name="description"></a>
+<a name="description"></a> 
 ## Description
 The Nanosensor-Imaging-App (NIA) is a MATLAB App built for processing timeseries fluorescence image stacks. This project was born from the need to process and quantify dopamine release in brain tissue slices using short-wavelength infrared fluorescent nanotube-based nanosensors ([publication](https://advances.sciencemag.org/content/5/7/eaaw3108)).
 
-<a name="features"></a>
+<a name="features"></a> 
 ## Features
 - Quantify fluorescence timeseries .tif files
 - Create a grid of regions of interest (ROI)
