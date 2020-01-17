@@ -35,7 +35,6 @@ function [measuredValues]=processROI(app)
             measuredValues(j).ROInum=j; 
         end
     end
-    %Calculate dF/F using average of 30 previous frames
     %Make progress bar
     f = app.NanosensorImagingAppUIFigure;
     d = uiprogressdlg(f,'Title','Normalizing Timeseries Traces',...
@@ -63,12 +62,14 @@ function [measuredValues]=processROI(app)
         measuredValues(roi).dFdetrend = df2;
         %Calculate zscore using the first 5 seconds of the baseline
         %corrected trace
-        noise = std(baselinedData(1:stimFrame-floor(5*frameRate)));
+        noise = std(baselinedData(1:floor(5*frameRate)));
         zscore = baselinedData./noise;
         measuredValues(roi).zscore = zscore;
         %Calculate AUC for the for the detrended dF/F curve. Use time
-        %interval from stimulus to stimulus+5seconds.
-        measuredValues(roi).auc = sum(df2(stimFrame:stimFrame+floor(5*frameRate)));
+        %interval from stimulus to stimulus+5seconds. Offset curve by the
+        %mean of the negative values.
+        meanNeg = mean(df2(df2(stimFrame:stimFrame+floor(5*frameRate))<0));
+        measuredValues(roi).auc = sum(df2(stimFrame:stimFrame+floor(5*frameRate))+meanNeg);
     end  
     disp('Done');
 end
