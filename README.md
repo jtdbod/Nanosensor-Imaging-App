@@ -30,22 +30,22 @@ The Nanosensor-Imaging-App (NIA) is a MATLAB App built for processing timeseries
 
 <a name="installation"></a>
 ## Installation
-Download the MATLAB App Installer [here](https://github.com/jtdbod/Nanosensor-Imaging-App/raw/master/Nanosensor-Imaging-App.mlappinstall). Double click the installation file and then click Install. Once installed, the app is added to the Apps Toolstrip in MATLAB.
+**Download** the MATLAB App Installer [here](https://github.com/jtdbod/Nanosensor-Imaging-App/raw/master/Nanosensor-Imaging-App.mlappinstall). Double click the installation file and then click Install. Once installed, the app is added to the Apps Toolstrip in MATLAB.
 
 NIA was developed and tested using the following dependences:
 
 |Package| Version|
 |---|---|
 |`MATLAB`	|`9.7`|
-|`Signal Processing Toolbox`	|`8.3`
-|`Image Processing Toolbox`	|`11.0`
-|`Statistics and Machine Learning Toolbox`|`11.6`
+|`Signal Processing Toolbox`|`8.3`|
+|`Image Processing Toolbox`	|`11.0`|
+|`Statistics and Machine Learning Toolbox`|`11.6`|
 
 <a name="usage"></a>
 ## Usage
-<h1 align="center">
-<img src="fig1.png" alt="Figure 1" width="600"/>
-</h1>
+<div style="text-align:center"><img src="fig1.png"/></div>
+
+## 
 Click the NIA icon in the App Toolstrip in MATLAB. Start by loading a `.tif` timeseries image stack into memory using the `Load Tif Stack` button (**1**). The first frame of image stack is displayed in (**2**) and the currently loaded file name is displayed in (**3**).  If the file is too large, MATLAB with throw an error. In this case, break the image stack into multiple parts. After entering the relevant parameters in (**4**), click the `Process Time Series` button (**5**) to generate a grid of ROIs with size `Grid Size (pixels)` and calculate mean intensity and `$\Delta F/F_{0}$` traces for each ROI. Click `Detect Spikes and Fit` (**6**) to locate and identify transients in the `$\Delta F/F_{0}$` traces using a gradient method assuming Gaussian noise. If a significant transient occurs a short time following the user supplied `Stimulus Frame Number` (**4**), the time trace is fit to the function `$\Delta F(t)/F_{0} = A(1-\exp(-t/\tau_{on}))\exp(-t/\tau_{off})+B$. A summary of mean values and standard deviations calculated for each ROI of the time series is then displayed in panel (**7**). Click the `To File` button (**8**) to export (i) the `results` structure to a MATLAB `.mat` file, (ii) a table of baseline-corrected `$\Delta F/F_{0}$` values for each ROI to a `.csv` file, and (iii) append the summary of results to a `Results Summary.xlsx` spreadsheet. Both (i) and (ii) will have filenames matching the filename of the `.tif` file analyzed. Alternatively, clicking the `To MATLAB Workspace` button will export the `results` structure to the current MATLAB workspace for further processing. Clicking the `Batch Process` button (**9**) will process an entire folder of `.tif` files using a single set of parameters entered in panel (**4**) using the above workflow.
 
 ### Details of the `results` structure
