@@ -12,3 +12,5 @@ Summary of Results.xlsx
 *.tif
 
 .DS_Store
+
+*.pdf

@@ -39,7 +39,7 @@ if significance
     F = @(x,xdata)x(1).*(1-exp(-x(3)*xdata)).*exp(-x(2).*xdata)+x(4); %defines first order equation
     opts = optimset('Display','off');
     warning off;
-    lowerBounds = [0,1/15,1/2,0.0001]; %Bounds for fit parameters.
+    lowerBounds = [0,1/15,1/10,0.0001]; %Bounds for fit parameters.
     upperBounds = [1000,1/0.01,1/0.01,0.05]; %Bounds for fit parameters
     fitResults = lsqcurvefit(F,x0,xdata,ydata,lowerBounds,upperBounds,opts); %adds the curve fit parameters to the parameter matrix
     warning on;
