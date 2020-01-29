@@ -62,11 +62,12 @@ Click the NIA icon in the App Toolstrip in MATLAB. Start by loading a `.tif` tim
 |`dF`|`$\Delta F(t)/F_{0}$` where `$F_{0}$` is calculated using the average intensity of the ROI for the 3 seconds prior to stimulus|
 |`dFdetrend`|`$(F(t)-F(t)_{0})/F(t)_{0}$` where `$F(t)_{0}$` is calculated using a median filtered trace with a window of 35 seconds.
 |`zscore`|Z-score trace calculated using the standard deviation of the first 5 seconds of the baseline corrected trace `$(F(t)-F(t)_{0})/F(t)_{0}$`|
-|`auc`|Area under the curve `$\sum_{i=n(t=0)}^{n(t=5)}(F(n)-F(n)_{0})/F(n)_{0}$` where `$n(t=0)$` is the stimulus frame and `$n(t=5)$` is the frame collected 5 seconds after stimulus. The trace is offset by the mean of the negative values in the interval to correct for a potential negative baseline prior to summation. Note, this area is calculated in units of 'frames', not in frameRate-corrected time units. Also, the trace |
+|`auc`|Area under the curve `$\sum_{i=n(t=0)}^{n(t=5)}(F(n)-F(n)_{0})/F(n)_{0}$` where `$n(t=0)$` is the stimulus frame and `$n(t=5)$` is the frame collected 5 seconds after stimulus. The trace is offset by the mean of the negative values in the interval to correct for a potential negative baseline prior to summation. Note, this area is calculated in units of 'frames', not in frameRate-corrected time units.|
 ### Details of the `fitData` structure
 |Field|Description|
 |---|---|
-|`fitResults`|An array containg the fit parameters (`[A,tau_{off},tau_{on},B]`) to the equation `$\Delta F(t)/F_{0} = A(1-\exp(-t/\tau_{on}))\exp(-t/\tau_{off})+B$` obtained using `lsqcurvefit()`. |
+|`fitResults`|An array containg the fit parameters (`[A,tau_{off},tau_{on},B]`) to the equation `$\Delta F(t)/F_{0} = A(1-\exp(-t/\tau_{on}))\exp(-t/\tau_{off})+B$` obtained using `lsqcurvefit()`|
+|`rootResNorm`|Root mean squared of fit residuals|
 |`fitPlot`|A 2 x n array for plotting the exponential fit to the baseline corrected `$\Delta F(t)/F(t)_{0}$`|
 |`spikeLocs`|An array containing the frame number for each detected spike/transient event|
 |`significance`|Logical index indicating whether a significant spike/transient occured within 2 seconds of stimulus|
