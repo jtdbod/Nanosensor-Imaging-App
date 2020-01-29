@@ -10,69 +10,41 @@ for file = 1:size(tifFiles,1)
         %User cancelled open command. Do nothing.
         error('Cancelled by user or no TIF files found');
     else
-        %Load stack
         loadTifStack(app,FileName,PathName);
-        fileinfo=imfinfo(strcat(PathName,'/',FileName));
-        handles.DataSet.numFrames=size(fileinfo,1);
+        app.CurrentFileTextArea.Value = app.imageStackInfo.fileName;
         
+        app.imageStackInfo.stimFrame = str2double(app.StimulusFrameNumberEditField.Value);
+        app.imageStackInfo.gridSize = str2double(app.GridSizepixelsEditField.Value);
+        app.imageStackInfo.frameRate = str2double(app.FrameRateHzEditField.Value);
+        app.roiMask = generateGrid(app);
+        app.results.roiData = processROI(app);
+        app.results.roiMask = app.roiMask;
+        app.results.imageStackInfo = app.imageStackInfo;
         
-        %Generate Mean Projection and dF Max Projecitons and store in handles
-        if ~isfield(handles.DataSet.projectionImages,'meanProj')
-        currFig = gcf;
-        axes(handles.axes1);
-        cla(handles.axes1);
-        title('Calculating Mean Projection')
-        xlabel('')
-        imageStack = handles.ImageStack;
-        imstack = imageStack;
-        if any(imageStack(:)<0)
-            imstack = imageStack-min(imageStack(:));
+        stimFrame = app.imageStackInfo.stimFrame;
+        frameRate = app.imageStackInfo.frameRate;
+        app.results.fitData = struct();
+        f = app.NanosensorImagingAppUIFigure;
+        d = uiprogressdlg(f,'Title','Identifying Spikes and Curve Fitting',...
+            'Message','Please Wait','Cancelable','on');
+        for i = 1:length(app.results.roiData)
+            if d.CancelRequested
+                break
+            end
+            d.Value = i./length(app.results.roiData);
+            traceData = app.results.roiData(i).dFdetrend;
+            [app.results.fitData(i).fitResults,...
+                app.results.fitData(i).rootResNorm,...
+                app.results.fitData(i).fitPlot,...
+                app.results.fitData(i).spikeLocs,...
+                app.results.fitData(i).significance]...
+                = fitExponentialFunction(traceData,stimFrame,frameRate);
         end
-
-        meanProjImage = mean(imstack,3);
-        meanProjImageFilt = medfilt2(meanProjImage,[3 3]);
-        handles.DataSet.projectionImages.meanProj = meanProjImageFilt;
-        guidata(hObject,handles);
-        end
-
-        if ~isfield(handles.DataSet.projectionImages,'dFMaxProj')
-        currFig = gcf;
-        axes(handles.axes1);
-        cla(handles.axes1);
-        title('Calculating dF Projection')
-        xlabel('')
-        imstack = handles.ImageStack;
-        dFImage = imstack-handles.DataSet.projectionImages.meanProj;
-        maxdFProjImage = max(dFImage,[],3);
-        maxdFProjImageFilt = medfilt2(maxdFProjImage,[4 4]);
-        handles.DataSet.projectionImages.dFMaxProj = maxdFProjImageFilt;
-        guidata(hObject,handles);
-        end
-        clear imstack dFImage
-        guidata(hObject,handles);%To save DataSet to handles
-
-        %Display first frame after file loads.
-        axes(handles.axes1);
-        cla(handles.axes1);
-        colormap(defineGemColormap);
-        imagesc(imageStack(:,:,1));
-        title('Frame 1')
-        cla(handles.axes2);
-        cla(handles.axes3);
-
-        delete(barhandle);
-        guidata(hObject,handles);%To save DataSet to handles
-
+        summaryData = generateSummary(app.results);
+        app.UISummaryTable.Data = summaryData;
+        
+        exportResults(app);
+        
     end
-
-
-    %handles = generateRois(handles);
-    handles = generateGrid(handles);
-    guidata(hObject,handles);
-    handles = processTifFile(handles);
-    guidata(hObject,handles);
-    handles = calculateDecayConstant(handles);
-    guidata(hObject,handles);
-end
 
 end

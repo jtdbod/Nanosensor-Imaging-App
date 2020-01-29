@@ -9,6 +9,8 @@ function results = loadTifStack(varargin)
         app = varargin{1};
         file = varargin{2};
         path = varargin{3};
+        app.imageStackInfo.fileName = file;
+        app.imageStackInfo.pathName = path;
     end
     
     file = strcat(path,'/',file);

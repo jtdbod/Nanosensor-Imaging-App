@@ -14,14 +14,17 @@ fitResults = zeros(size(results.fitData,2),4);
 df = zeros(size(results.roiData(1),2),size(results.roiData(1).dFdetrend,2));
 aucs = zeros(1,size(results.roiData,2));
 for i = 1:size(results.fitData,2)
-    fitPlots(i,:) = results.fitData(i).fitPlot(2,:);
+    %fitPlots(i,:) = results.fitData(i).fitPlot(2,:);
     fitResults(i,:) = results.fitData(i).fitResults;
     df(i,:) = results.roiData(i).dFdetrend;
     aucs(i) = results.roiData(i).auc;
 end
 %%
 h1=figure();
-plot(xfit,fitPlots')
+for i=1:size(results.fitData,2)
+    plot(results.fitData(i).fitPlot(1,:),results.fitData(i).fitPlot(2,:))
+    hold on
+end
 xlabel('Time (s)')
 ylabel('dF/F0')
 title('Exponential Fits')
@@ -44,19 +47,20 @@ ylabel('Area Under Curve of dF/F')
 
 %%
 
-stackedPlots = zeros([size(df)]);
-stackedPlots(1,:) = df(1,:);
-stackedFits = zeros([size(fitPlots)]);
-stackedFits(1,:) = fitPlots(1,:);
-for i=2:size(fitPlots,1)
-    stackedFits(i,:) = fitPlots(i,:)+max(stackedFits(i-1,:))+0.1*max(fitPlots(1,:));
-    stackedPlots(i,:) = df(i,:)+max(stackedFits(i-1,:))+0.1*max(fitPlots(1,:));
-end
+
 %%
 h3=figure();
-plot(xfit,stackedFits')
 hold on
-plot(x,stackedPlots')
+plot(results.fitData(1).fitPlot(1,:),results.fitData(1).fitPlot(2,:));
+plot(x,results.roiData(1).dFdetrend);
+yShift = max(results.fitData(1).fitPlot(2,:));
+x = (1:length(results.roiData(1).dFdetrend))./results.imageStackInfo.frameRate;
+for i=2:size(results.fitData,2)
+    plot(results.fitData(i).fitPlot(1,:),results.fitData(i).fitPlot(2,:)...
+        +yShift)
+    plot(x,results.roiData(i).dFdetrend+yShift);
+    yShift = max(results.fitData(i).fitPlot(2,:)+yShift);
+end
 xlabel('Time(s)')
 ylabel('dF/F0')
 position = get(h3,'Position');
@@ -68,6 +72,7 @@ close(h1a)
 close(h2)
 close(h3)
 
+%%
 
     
 
