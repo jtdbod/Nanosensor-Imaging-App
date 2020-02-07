@@ -2,7 +2,7 @@ function[fitResults, rootResNorm, fitPlot, spikeLocs, significance]=fitExponenti
 % Determine if any transients occur using a simple gradient method and
 % assumption of negative gaussian noise. Then, if transients are present,
 % fit a multiexponential curve to the data.
-% fitResults = [multiplicative_factor,tau_on,tau_off,offset]   
+% fitResults = [multiplicative_factor,tau_on,tau_off,offset]  
 
 % Estimate spikes using simple gradient and gaussian noise
 spikeLocs = [];
@@ -28,11 +28,14 @@ if length(spikeLocs)>1
 end
 
 %Fit exponential function to trace starting from stimulus if spike occurs
-%within 2 seconds of stimulus
-significance = ~isempty(spikeLocs)&&~isempty(find(spikeLocs>stimFrame))&&~isempty(find(spikeLocs<stimFrame+floor((2*frameRate))));
+%within 2 seconds of stimulus or within 2 frames (in the case where there
+%was a jitter in Arduino signal and the camera aquisition.
+significance = (~isempty(spikeLocs)&&...
+    ~isempty(find((spikeLocs(spikeLocs>stimFrame)-stimFrame)<(2*frameRate))))||...
+    ~isempty(find(abs((spikeLocs-stimFrame))<=2));
 if significance
     %Find frame where transient starts
-    spikeLocsPositive = spikeLocs(spikeLocs>stimFrame);
+    spikeLocsPositive = spikeLocs(spikeLocs>=(stimFrame-2));
     diffFrame = spikeLocsPositive-stimFrame;
     [val,idx]=min(diffFrame);
     fitStartFrame = spikeLocsPositive(idx);
@@ -47,7 +50,8 @@ if significance
     xdata = 0:length(ydata)-1;
     xdata = xdata./frameRate;
     %Fit parameters [A t_off t_on offset]
-    x0 = [1, 1, 1, 0]; %pick arbitrary initial values for the constant and tau 
+    x0 = [1, 1, 1, 0]; %pick arbitrary initial values for the constant and tau
+    disp(length(ydata));
     F = @(x,xdata)x(1)*(1-exp(-(xdata)./x(2))).*exp(-(xdata)./x(3))+x(4);
     opts = optimset('Display','off');
     warning off;
