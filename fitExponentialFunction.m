@@ -2,7 +2,7 @@ function[fitResults, rootResNorm, fitPlot, spikeLocs, significance]=fitExponenti
 % Determine if any transients occur using a simple gradient method and
 % assumption of negative gaussian noise. Then, if transients are present,
 % fit a multiexponential curve to the data.
-% fitResults = [A 1/tau_off 1/tau_on vertical_offset]   
+% fitResults = [multiplicative_factor,tau_on,tau_off,offset]   
 
 % Estimate spikes using simple gradient and gaussian noise
 spikeLocs = [];
@@ -32,23 +32,38 @@ end
 significance = ~isempty(spikeLocs)&&~isempty(find(spikeLocs>stimFrame))&&~isempty(find(spikeLocs<stimFrame+floor((2*frameRate))));
 if significance
     %Find frame where transient starts
-    [val,idx]=min(abs(spikeLocs-stimFrame));
-    fitStartFrame = spikeLocs(idx)-1;
-    ydata = trace(fitStartFrame:end);
-    xdata = 1:length(ydata);
+    spikeLocsPositive = spikeLocs(spikeLocs>stimFrame);
+    diffFrame = spikeLocsPositive-stimFrame;
+    [val,idx]=min(diffFrame);
+    fitStartFrame = spikeLocsPositive(idx);
+    %fitStartFrame = stimFrame;
+    %ydata = trace(fitStartFrame:fitStartFrame+floor(5.*frameRate));
+    ydata = trace(fitStartFrame:fitStartFrame+floor(10.*frameRate));
+    %Fix negative offset if there is one
+    negOffset = min(ydata);
+    if negOffset<0
+        ydata = ydata-negOffset;
+    end
+    xdata = 0:length(ydata)-1;
     xdata = xdata./frameRate;
     %Fit parameters [A t_off t_on offset]
-    x0 = [max(ydata), 1/5, 1, 0.03]; %pick arbitrary initial values for the constant and tau 
-    F = @(x,xdata)x(1).*(1-exp(-x(3)*xdata)).*exp(-x(2).*xdata)+x(4); %defines first order equation
+    x0 = [1, 1, 1, 0]; %pick arbitrary initial values for the constant and tau 
+    F = @(x,xdata)x(1)*(1-exp(-(xdata)./x(2))).*exp(-(xdata)./x(3))+x(4);
     opts = optimset('Display','off');
     warning off;
-    lowerBounds = [0,1/15,1/10,0.0001]; %Bounds for fit parameters.
-    upperBounds = [1000,1/0.01,1/0.01,0.05]; %Bounds for fit parameters
+    lowerBounds = [0,0,0.01,-1]; %Bounds for fit parameters.
+    upperBounds = [5,100,100,1]; %Bounds for fit parameters
     [fitResults,resnorm] = lsqcurvefit(F,x0,xdata,ydata,lowerBounds,upperBounds,opts); %adds the curve fit parameters to the parameter matrix
     rootResNorm = sqrt(resnorm);
     warning on;
-    shiftedxData = xdata+fitStartFrame./frameRate;
-    fitPlot = [shiftedxData; F(fitResults,xdata)];
+    shiftedxData = xdata+(fitStartFrame)./frameRate;
+    x = shiftedxData;
+    y = F(fitResults,xdata);
+    %Fix offset if one was made
+    if negOffset<0
+        y = y+negOffset;
+    end
+    fitPlot = [x; y];
 else
     %If no transient detected, return NaN array for fit and a flat fit
     %curve.

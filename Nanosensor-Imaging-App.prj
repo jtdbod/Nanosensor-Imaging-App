@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="1236958204" file="/Users/travis/Google Drive/MATLAB/Nanosensor-Imaging-App/Nanosensor-Imaging-App.prj" location="/Users/travis/Google Drive/MATLAB/Nanosensor-Imaging-App" name="Nanosensor-Imaging-App" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="3587057650" file="/Users/travis/Google Drive/MATLAB/Nanosensor-Imaging-App/Nanosensor-Imaging-App.prj" location="/Users/travis/Google Drive/MATLAB/Nanosensor-Imaging-App" name="Nanosensor-Imaging-App" target="target.mlapps" target-name="Package App">
     <param.appname>Nanosensor-Imaging-App</param.appname>
     <param.authnamewatermark>Jackson Travis Del Bonis-O'Donnell</param.authnamewatermark>
     <param.email>jtdo@berkeley.edu</param.email>
@@ -12,8 +12,8 @@
     </param.icons>
     <param.summary>App for processing timeseries fluorescence image stacks.</param.summary>
     <param.description>App for processing timeseries fluorescence image stacks.</param.description>
-    <param.screenshot>/private/var/folders/10/2hvb9j2n4bv8xq2905nswn_r0000gn/T/tp0bcc5c4a_3f41_4287_a19f_e981c7053ad0.png</param.screenshot>
-    <param.version>1.0</param.version>
+    <param.screenshot>/private/var/folders/10/2hvb9j2n4bv8xq2905nswn_r0000gn/T/tp47914865_4f24_4aad_981e_5ed47b48af80.png</param.screenshot>
+    <param.version>1.1.0</param.version>
     <param.products.name />
     <param.products.id />
     <param.products.version />
@@ -21,7 +21,6 @@
     <param.output>${PROJECT_ROOT}</param.output>
     <param.guid>d3c6ac3c-168f-459a-83b8-57502025d8ce</param.guid>
     <unset>
-      <param.version />
       <param.products.name />
       <param.products.id />
       <param.products.version />
@@ -37,6 +36,7 @@
       <file>${PROJECT_ROOT}/exportResults.m</file>
       <file>${PROJECT_ROOT}/fitExponentialFunction.m</file>
       <file>${PROJECT_ROOT}/generateGrid.m</file>
+      <file>${PROJECT_ROOT}/generateReport.m</file>
       <file>${PROJECT_ROOT}/generateSummary.m</file>
       <file>${PROJECT_ROOT}/loadTifStack.m</file>
       <file>${PROJECT_ROOT}/processROI.m</file>
