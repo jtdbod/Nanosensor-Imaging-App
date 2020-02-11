@@ -66,7 +66,7 @@ Click the NIA icon in the App Toolstrip in MATLAB. Start by loading a `.tif` tim
 ### Details of the `fitData` structure
 |Field|Description|
 |---|---|
-|`fitResults`|An array containg the fit parameters (`[A,tau_{off},tau_{on},B]`) to the equation `$\Delta F(t)/F_{0} = A(1-\exp(-t/\tau_{on}))\exp(-t/\tau_{off})+B$` obtained using `lsqcurvefit()`|
+|`fitResults`|An array containg the fit parameters (`[A,tau_{on},tau_{off},B]`) to the equation `$\Delta F(t)/F_{0} = A(1-\exp(-t/\tau_{on}))\exp(-t/\tau_{off})+B$` obtained using `lsqcurvefit()`|
 |`rootResNorm`|Root mean squared of fit residuals|
 |`fitPlot`|A 2 x n array for plotting the exponential fit to the baseline corrected `$\Delta F(t)/F(t)_{0}$`|
 |`spikeLocs`|An array containing the frame number for each detected spike/transient event|
