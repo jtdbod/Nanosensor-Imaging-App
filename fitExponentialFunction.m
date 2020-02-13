@@ -51,7 +51,6 @@ if significance
     xdata = xdata./frameRate;
     %Fit parameters [A t_off t_on offset]
     x0 = [1, 1, 1, 0]; %pick arbitrary initial values for the constant and tau
-    disp(length(ydata));
     F = @(x,xdata)x(1)*(1-exp(-(xdata)./x(2))).*exp(-(xdata)./x(3))+x(4);
     opts = optimset('Display','off');
     warning off;

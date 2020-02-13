@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.apptool" plugin-version="1.0">
-  <configuration build-checksum="2479783945" file="/Users/travis/Google Drive/MATLAB/Nanosensor-Imaging-App/Nanosensor-Imaging-App.prj" location="/Users/travis/Google Drive/MATLAB/Nanosensor-Imaging-App" name="Nanosensor-Imaging-App" target="target.mlapps" target-name="Package App">
+  <configuration build-checksum="2314876064" file="/Users/travis/Google Drive/MATLAB/Nanosensor-Imaging-App/Nanosensor-Imaging-App.prj" location="/Users/travis/Google Drive/MATLAB/Nanosensor-Imaging-App" name="Nanosensor-Imaging-App" target="target.mlapps" target-name="Package App">
     <param.appname>Nanosensor-Imaging-App</param.appname>
     <param.authnamewatermark>Jackson Travis DelBonisODonnell</param.authnamewatermark>
     <param.email>jtdo@berkeley.edu</param.email>
@@ -12,8 +12,8 @@
     </param.icons>
     <param.summary>A MATLAB App for processing time series TIF stacks of fluorescent nanosensors in acute brain slice.</param.summary>
     <param.description>App for processing timeseries fluorescence image stacks.</param.description>
-    <param.screenshot>/private/var/folders/10/2hvb9j2n4bv8xq2905nswn_r0000gn/T/tpa0e54165_adf0_4403_acb6_7fd940506bd8.png</param.screenshot>
-    <param.version>1.2</param.version>
+    <param.screenshot>/private/var/folders/10/2hvb9j2n4bv8xq2905nswn_r0000gn/T/tp14530e9b_37ef_40e9_9056_c7755d63b726.png</param.screenshot>
+    <param.version>1.2.2</param.version>
     <param.products.name />
     <param.products.id />
     <param.products.version />
