@@ -20,6 +20,7 @@ for file = 1:size(tifFiles,1)
         app.results.roiData = processROI(app);
         app.results.roiMask = app.roiMask;
         app.results.imageStackInfo = app.imageStackInfo;
+     app.results.imageStackInfo.firstFrame = mean(app.imageStack(:,:,1:5),3);
         
         stimFrame = app.imageStackInfo.stimFrame;
         frameRate = app.imageStackInfo.frameRate;
