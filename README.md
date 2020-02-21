@@ -9,6 +9,7 @@ Nanosensor-Imaging-App
 * [Description](#description)
 * [Features](#features)
 * [Installation](#installation)
+* [Changelog](#changelog)
 * [Usage](#usage)
 * [Support](#support)
 * [Troubleshooting](#troubleshooting)
@@ -41,6 +42,20 @@ NIA was developed and tested using the following dependences:
 |`Signal Processing Toolbox`|`8.3`|
 |`Image Processing Toolbox`	|`11.0`|
 |`Statistics and Machine Learning Toolbox`|`11.6`|
+
+<a name="changelog"></a>
+## Changelog
+Current stable release: 1.3.2
+Release Date: 2020-02-20
+### Added
+- Progress of batch processing now displayed in command window.
+- Summary of plots now saved as a .fig file including several new plots.
+### Removed
+- Removed .pdf generation for plots. Now saves editable .fig file.
+### Fixed
+- Fixed issue where files were saved in parent folder
+- Fixed issue with negative AUC calculations (sign mixup in calculation).
+
 
 <a name="usage"></a>
 ## Usage
