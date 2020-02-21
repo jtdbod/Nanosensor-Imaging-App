@@ -4,6 +4,8 @@ selpath = uigetdir;
 tifFiles = dir(strcat(selpath,'/*.tif'));
 
 for file = 1:size(tifFiles,1)
+    clc
+    disp("Processing File " + file + " of " + size(tifFiles,1))
     FileName = tifFiles(file).name;
     PathName = selpath;
     if FileName==0

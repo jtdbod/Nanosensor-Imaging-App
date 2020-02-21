@@ -37,7 +37,7 @@ dataFill = table({numRois;'-'},{numSigs;'-'},...
     {tau_off;tau_off_std},{meanAuc;meanAuc_std},...
     {maxdFoverF;maxdFoverF_std},'VariableNames',variableNames);
 
-fileLocation = strcat(results.imageStackInfo.pathName,'Summary of Results.xlsx');
+fileLocation = strcat(results.imageStackInfo.pathName,'/Results Summary.xlsx');
 if exist(fileLocation,'file')==2
     T1 = readtable(fileLocation,'PreserveVariableNames',true);
     headerNames = {'File Name','Processed Timestamp','ROI Total','Significant ROIs',...
@@ -56,8 +56,8 @@ else
         numRois,numSigs,pctSig,tau_on,tau_on_std,...
         tau_off,tau_off_std,meanAuc,meanAuc_std,...
         maxdFoverF,maxdFoverF_std,'VariableNames',headerNames);
-    writetable([T;T],fileLocation);
+    writetable([T],fileLocation);
 end
-
+end
     
     
