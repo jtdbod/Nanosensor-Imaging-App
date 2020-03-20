@@ -45,14 +45,24 @@ NIA was developed and tested using the following dependences:
 
 <a name="changelog"></a>
 ## Changelog
-Current stable release: 1.3.2
+### Current Stable Release: 1.3.3
+Release DateL 2020-03-19
+Description: Hotfix for generateReport.m 0 index colormap error.
+
+#### Fixed
+- Fixed issue in generateReport.m where background subtraction of signal for normalizing colormap returned a 0 which was used for attempting to index colormap.
+
+### Version: 1.3.2
 Release Date: 2020-02-20
-### Added
+
+#### Added
 - Progress of batch processing now displayed in command window.
 - Summary of plots now saved as a .fig file including several new plots.
-### Removed
+
+#### Removed
 - Removed .pdf generation for plots. Now saves editable .fig file.
-### Fixed
+
+#### Fixed
 - Fixed issue where files were saved in parent folder
 - Fixed issue with negative AUC calculations (sign mixup in calculation).
 
