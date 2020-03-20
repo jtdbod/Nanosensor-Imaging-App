@@ -91,7 +91,11 @@ image = results.imageStackInfo.firstFrame;
 stimFrame = results.imageStackInfo.stimFrame;
 frameRate = results.imageStackInfo.frameRate;
 for i =1:max(mask(:))
-    maxdf(i)=max(results.roiData(i).dFdetrend(:,stimFrame:stimFrame+floor(3*frameRate)),[],2);
+    if results.fitData(i).significance
+        maxdf(i)=max(results.roiData(i).dFdetrend(:,stimFrame:stimFrame+floor(3*frameRate)),[],2);
+    else
+        maxdf(i) = NaN;   
+    end
 end
 normdf = maxdf-min(maxdf)+0.01*min(maxdf);
 normdf = normdf./max(normdf);
@@ -114,7 +118,7 @@ for i = 1:max(mask(:))
         end
         rectangle('Position',position,'Curvature',0.5,'EdgeColor',[cmap(normdf(i),:),0.5],'LineWidth',4);
     end
-    end
+end
 caxis;
 
 %%%%
