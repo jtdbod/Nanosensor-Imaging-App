@@ -104,15 +104,17 @@ cmap = colormap('hot');
 colormap('parula');
 %colormap('parula');
 for i = 1:max(mask(:))
-    position = [floor(results.roiData(i).CenterX(1)),...
-    floor(results.roiData(i).CenterY(1)),...
-    results.imageStackInfo.gridSize-2,...
-    results.imageStackInfo.gridSize-2];
-    if normdf(i)==0
-        normdf(i)=.001; %Fix index = 0 error.
+    if results.fitData(i).significance
+        position = [floor(results.roiData(i).CenterX(1)),...
+        floor(results.roiData(i).CenterY(1)),...
+        results.imageStackInfo.gridSize-2,...
+        results.imageStackInfo.gridSize-2];
+        if normdf(i)==0
+            normdf(i)=1; %Fix index = 0 error.
+        end
+        rectangle('Position',position,'Curvature',0.5,'EdgeColor',[cmap(normdf(i),:),0.5],'LineWidth',4);
     end
-    rectangle('Position',position,'Curvature',0.5,'EdgeColor',[cmap(normdf(i),:),0.5],'LineWidth',4);
-end
+    end
 caxis;
 
 %%%%
