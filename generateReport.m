@@ -108,8 +108,10 @@ for i = 1:max(mask(:))
     floor(results.roiData(i).CenterY(1)),...
     results.imageStackInfo.gridSize-2,...
     results.imageStackInfo.gridSize-2];
-    rectangle('Position',position,'Curvature',0.5,...
-        'EdgeColor',[cmap(normdf(i),:),0.5],'LineWidth',4);
+    if normdf(i)==0
+        normdf(i)=.001; %Fix index = 0 error.
+    end
+    rectangle('Position',position,'Curvature',0.5,'EdgeColor',[cmap(normdf(i),:),0.5],'LineWidth',4);
 end
 caxis;
 
