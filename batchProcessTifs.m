@@ -47,7 +47,10 @@ for file = 1:size(tifFiles,1)
         app.UISummaryTable.Data = summaryData;
         
         exportResults(app);
-        generateReport(app);
+        containsSigEvents = any([app.results.fitData(:).significance]);
+        if containsSigEvents
+            generateReport(app);
+        end
     end
 
 end
