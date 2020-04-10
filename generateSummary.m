@@ -23,8 +23,13 @@ meanAuc_std = nanstd([results.roiData(sigIndex).auc]);
 dFdetrend = reshape([results.roiData(sigIndex).dFdetrend].',length(results.roiData(1).dFdetrend),[])';
 frameRate = results.imageStackInfo.frameRate;
 stimFrame = results.imageStackInfo.stimFrame;
-maxdFoverF = nanmean(max(dFdetrend(:,stimFrame:stimFrame+floor(3*frameRate)),[],2));
-maxdFoverF_std = nanstd(max(dFdetrend(:,stimFrame:stimFrame+floor(3*frameRate)),[],2));
+if ~results.imageStackInfo.containsStim
+    maxdFoverF = 0;
+    maxdFoverF_std = 0;
+else
+    maxdFoverF = nanmean(max(dFdetrend(:,stimFrame:stimFrame+floor(3*frameRate)),[],2));
+    maxdFoverF_std = nanstd(max(dFdetrend(:,stimFrame:stimFrame+floor(3*frameRate)),[],2));
+end
 %{
 dataValues = {numRois numSigs pctSig tau_on tau_off...
     meanAuc maxdFoverF};

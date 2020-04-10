@@ -47,7 +47,9 @@ for file = 1:size(tifFiles,1)
         app.UISummaryTable.Data = summaryData;
         
         exportResults(app);
+        if ~app.NoStimulusCheckBox.Value
         generateReport(app);
+        end
     end
 
 end

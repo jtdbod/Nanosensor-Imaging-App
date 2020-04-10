@@ -1,5 +1,41 @@
-function [measuredValues]=processROI(app)
-    imagestack = app.imageStack;
+%Script for mining first 190 frames from brain slice timeseries imaging to
+%get data without stimulation. This data will then be mined for spontaneous
+%activity.
+maxFrameNum = 190; %Limit to frames prior to stim
+imageStackInfo.stimFrame = 200;
+imageStackInfo.gridSize = 25;
+imageStackInfo.frameRate = str2double(FrameRateHzEditField.Value);
+selpath = uigetdir;
+tifFiles = dir(strcat(selpath,'/*.tif'));
+
+for file = 1:size(tifFiles,1)
+    
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load substack
+    clc
+    disp("Processing File " + file + " of " + size(tifFiles,1))
+    file = tifFiles(file).name;
+    path = selpath;
+    imageStackInfo.fileName = file;
+    imageStackInfo.pathName = path;
+    file = strcat(path,'/',file);
+    fileinfo = imfinfo(file);
+    imageStackInfo.height=fileinfo(1).Height;
+    imageStackInfo.width=fileinfo(1).Width;
+    imageStackInfo.numFrames=size(fileinfo,1);
+    imageStack=zeros(imageStackInfo.height,...
+    imageStackInfo.width,imageStackInfo.numFrames);
+    for j=1:maxFrameNum %Limit frames to before stimulation occurs 
+        imageStack(:,:,j)=imread(file,j); 
+    end
+    imageStack = imageStack;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Process ROIs
+
+        roiMask = generateGrid(app);
+        
+        imagestack = app.imageStack;
     roiMask = app.roiMask;
     frameRate = app.imageStackInfo.frameRate;
     frames = app.imageStackInfo.numFrames;
@@ -68,12 +104,49 @@ function [measuredValues]=processROI(app)
         %Calculate AUC for the detrended dF/F curve. Use time
         %interval from stimulus to stimulus+5seconds. Smooth curve and then
         %offset by the min value.
-        if app.NoStimulusCheckBox.Value
-            traceAUC = 0;
-        else
-            traceAUC = smooth(df2(stimFrame:stimFrame+floor(5*frameRate)),5);
-            traceAUC=traceAUC-min(traceAUC);
-        end
+        traceAUC = smooth(df2(stimFrame:stimFrame+floor(5*frameRate)),5);
+        traceAUC=traceAUC-min(traceAUC);
         measuredValues(roi).auc = sum(traceAUC);
     end  
+end
+        results.roiData = processROI(app);
+        
+        
+        
+        results.roiMask = roiMask;
+        results.imageStackInfo = imageStackInfo;
+        results.imageStackInfo.firstFrame = mean(imageStack(:,:,1:5),3);
+        
+        stimFrame = imageStackInfo.stimFrame;
+        frameRate = imageStackInfo.frameRate;
+        results.fitData = struct();
+        f = NanosensorImagingAppUIFigure;
+        d = uiprogressdlg(f,'Title','Identifying Spikes and Curve Fitting',...
+            'Message','Please Wait','Cancelable','on');
+        for i = 1:length(results.roiData)
+
+            
+            traceData = results.roiData(i).dFdetrend;
+            [results.fitData(i).fitResults,...
+                results.fitData(i).rootResNorm,...
+                results.fitData(i).fitPlot,...
+                results.fitData(i).spikeLocs,...
+                results.fitData(i).significance]...
+                = fitExponentialFunction(traceData,stimFrame,frameRate);
+        endsummaryData = generateSummary(results);        
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Export Results        
+    fileToSave = strcat(app.imageStackInfo.pathName,'/',app.imageStackInfo.fileName);
+    results = app.results;
+    save(strcat(fileToSave(1:end-4),'.mat'),'results');
+    %Create array of dF/F values
+    df = zeros(length(results.roiData(1).dFdetrend),length(results.roiData));
+    for i=1:length(results.roiData)
+        df(:,i)=results.roiData(i).dFdetrend;
+    end
+    writematrix(df,strcat(fileToSave(1:end-4),'.xlsx'),'Sheet','dF_F0 Detrend')        
+        generateReport(app);
+        end
+        
 end

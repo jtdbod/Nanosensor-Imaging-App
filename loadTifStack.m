@@ -17,13 +17,24 @@ function results = loadTifStack(varargin)
     fileinfo = imfinfo(file);
     app.imageStackInfo.height=fileinfo(1).Height;
     app.imageStackInfo.width=fileinfo(1).Width;
-    app.imageStackInfo.numFrames=size(fileinfo,1);
+    if app.LimitanalysistoframesEditField.Value~=0
+        app.imageStackInfo.numFrames = ...
+            app.LimitanalysistoframesEditField.Value;
+    else
+        app.imageStackInfo.numFrames=size(fileinfo,1);
+    end
+    if app.NoStimulusCheckBox.Value
+        app.imageStackInfo.containsStim = 0;
+    else
+        app.imageStackInfo.containsStim = 1;
+    end
     imageStack=zeros(app.imageStackInfo.height,...
         app.imageStackInfo.width,app.imageStackInfo.numFrames);
     %Make progress bar
     f = app.NanosensorImagingAppUIFigure;
     d = uiprogressdlg(f,'Title','Loading Image Stack',...
     'Message','Please Wait','Cancelable','on');
+
     for j=1:app.imageStackInfo.numFrames
         if d.CancelRequested
             break
