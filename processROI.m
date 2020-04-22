@@ -45,7 +45,7 @@ function [measuredValues]=processROI(app)
         end
         d.Value = roi./numROIs; %Update progress bar
         trace=measuredValues(roi).MeanIntensity;
-        window = 2*(floor((35*frameRate)/2))+1; %Use a 35 second smoothing window, ensuring it is odd number;
+        window = 2*(floor((25*frameRate)/2))+1; %Use a 35 second smoothing window, ensuring it is odd number;
         filtTrace = medfilt1(trace,window,'truncate');
         baselinedData = trace-filtTrace;
         %Calculate df/f0 using f0 as the mean intensity of the 3 seconds prior to
@@ -60,10 +60,10 @@ function [measuredValues]=processROI(app)
         %corresponding time point. This corrects for drifting baselines.
         df2 = (trace-filtTrace)./filtTrace;
         measuredValues(roi).dFdetrend = df2;
-        %Calculate zscore using the first 5 seconds of the baseline
+        %Calculate zscore using the first 10 seconds of the baseline
         %corrected trace
-        noise = std(baselinedData(1:floor(5*frameRate)));
-        zscore = baselinedData./noise;
+        noise = std(df2(1:floor(10*frameRate)));
+        zscore = df2./noise;
         measuredValues(roi).zscore = zscore;
         %Calculate AUC for the detrended dF/F curve. Use time
         %interval from stimulus to stimulus+5seconds. Smooth curve and then
