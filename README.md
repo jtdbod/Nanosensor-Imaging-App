@@ -45,8 +45,11 @@ NIA was developed and tested using the following dependences:
 
 <a name="changelog"></a>
 ## Changelog
-### Current Stable Release: 1.3.3
-Release DateL 2020-03-19
+### Current Stable Release: 1.3.4
+Release Date: 2020-05-01
+Adjusts thresholding for determining if ROI contains significant event, particularly if the stim occurs offset in time due to Arduino timing/jitter issues. Greatly reduces false negatives.
+### Version: 1.3.3
+Release Date: 2020-03-19
 Description: Hotfix for generateReport.m 0 index colormap error.
 
 #### Fixed
