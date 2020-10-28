@@ -1,36 +1,25 @@
 function[fitResults, rootResNorm, fitPlot, spikeLocs, significance]=fitExponentialFunction(trace,stimFrame,frameRate)
-% Determine if any transients occur using a simple gradient method and
-% assumption of negative gaussian noise. Then, if transients are present,
-% fit a multiexponential curve to the data.
-% fitResults = [multiplicative_factor,tau_on,tau_off,offset]  
+% Determine if transient occurs following stimulus. A significant transient
+% is determined using a threshold method where the threshold is calculated
+% using values falling below the baseline from a baseline-corrected dF/F
+% trace. Assuming Gaussian noise, a symmetric distribution is constructed
+% and the threshold is calculated as 3 times the standard distribution.
+
+% RETURNS:
+% fitResults = [multiplicative_factor,tau_on,tau_off,offset] 
+% fitPlot = n x 2 array with col1 = time, col2 = fitted values
+% spikeLocs = array containing index locations of dF/F array where significant transient occurs
+% significance = boolean indicating whether a transient occured after
+% stimulation
 
 % Estimate spikes using simple gradient and gaussian noise
 spikeLocs = [];
 xdata = 1:length(trace);
 ydata = trace;
-%gradTrace = diff(ydata)./diff(xdata);
-%negValues = gradTrace(gradTrace<0);
 negValues = trace(trace<0);
 noise = [negValues -negValues];
 threshold = 3*std(noise);
-%spikeLocs = find(gradTrace>threshold);%Offset by 1 to account for diff calculation
 spikeLocs = find(trace>threshold);
-%{
-spikeLocsInit = find(trace>threshold);
-%Determine if they are distinct spikes or not.
-if length(spikeLocsInit)>1
-    reducedSpikeLocs=[];
-    flipSpikeLocs = flip(spikeLocsInit);
-    reducedSpikeLocs = flipSpikeLocs(diff(-flipSpikeLocs)>2);
-    if isempty(reducedSpikeLocs)
-        spikeLocs = spikeLocsInit(1);
-    else
-        spikeLocs = [spikeLocsInit(1) flip(reducedSpikeLocs)];
-    end
-    %This effectively checks for spikes that are closer than 2 frames apart
-    %and then treats that as a single spike occuring
-end
-%}
 
 %Fit exponential function to trace starting from stimulus if spike occurs
 %within 2 seconds of stimulus or within 10 frames (in the case where there
@@ -64,11 +53,6 @@ if significance
         searchWindow = fitStartFrame-floor(2*frameRate):fitStartFrame;
         [val, idx] = max(diff(trace(searchWindow)));
         fitStartFrame = searchWindow(idx);
-        %{
-        diffFrame = spikeLocsPositive-stimFrame;
-        [val,idx]=min(diffFrame);
-        fitStartFrame = spikeLocsPositive(idx);
-        %}
         ydata = trace(fitStartFrame:fitStartFrame+floor(10.*frameRate));
         %Fix negative offset if there is one
         negOffset = min(ydata);
@@ -77,7 +61,7 @@ if significance
         end
         xdata = 0:length(ydata)-1;
         xdata = xdata./frameRate;
-        %Fit parameters [A t_off t_on offset]
+        %Fit parameters [A t_on t_off offset]
         x0 = [1, 1, 1, 0]; %pick arbitrary initial values for the constant and tau
         F = @(x,xdata)x(1)*(1-exp(-(xdata)./x(2))).*exp(-(xdata)./x(3))+x(4);
         opts = optimset('Display','off');
